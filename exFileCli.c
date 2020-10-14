@@ -35,14 +35,21 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        fputs("input >> ", stdout);
-        fgets(sendBuf, MAX_SIZE, stdin);
+        fputs("input >> ", stdout);      // put message
+        fgets(sendBuf, MAX_SIZE, stdin); // get message
 
         write(sock, sendBuf, MAX_SIZE);
+        if (!strncmp("QUIT", sendBuf, strlen("QUIT")))
+        {
+            shutdown(sock, SHUT_WR);
+            break;
+        }
         read(sock, recvBuf, MAX_SIZE);
 
         printf("from server : %s\n", recvBuf);
     }
+
+    read(sock, recvBuf, MAX_SIZE);
 
     close(sock);
 
